@@ -1,5 +1,5 @@
 Clojure-complete is an symbol completion library for Clojure. The code is adapted from
-Jeffrey Chu's [swank-clojure](http://github.com/jochu/swank-clojure).
+[swank-clojure](http://github.com/jochu/swank-clojure) by Jeffrey Chu.
 
 ## Examples
 
