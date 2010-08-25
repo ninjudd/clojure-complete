@@ -1,7 +1,5 @@
 (ns complete
-  (:use [useful :only [defm]])
-  (:import [java.util.jar JarFile]
-           [java.io File]))
+  (:import [java.util.jar JarFile] [java.io File]))
 
 ;; Code adapted from swank-clojure (http://github.com/jochu/swank-clojure)
 
@@ -26,6 +24,9 @@
   [ns]
   (map name (keys (ns-imports ns))))
 
+(def special-forms
+  (map name '[def if do let quote var fn loop recur throw try monitor-enter monitor-exit dot new set!]))
+
 (defn- static? [#^java.lang.reflect.Member member]
   (java.lang.reflect.Modifier/isStatic (.getModifiers member)))
 
@@ -41,29 +42,41 @@
   (for [member (concat (.getMethods class) (.getDeclaredFields class)) :when (static? member)]
     (.getName member)))
 
-(defn url-files [url]
-  (let [path (.getFile url)]
-    (if (.endsWith path ".jar")
-      (for [entry (enumeration-seq (.entries (JarFile. path)))]
-        (.getName entry))
-      (for [file (file-seq (File. path))]
-        (.replace (.getPath file) path "")))))
+(defn path-files [path]
+  (cond (.endsWith path "/*")
+        (for [jar  (.listFiles (File. path)) :when (.endsWith (.getName jar) ".jar")
+              file (path-files (.getPath jar))]
+          file)
 
-(defn classfiles []
-  (for [url  (.getURLs (.getClassLoader clojure.lang.RT))
-        file (url-files url) :when (and (.endsWith file ".class") (not (.contains file "__")))]
+        (.endsWith path ".jar")
+        (try (for [entry (enumeration-seq (.entries (JarFile. path)))]
+               (.getName entry))
+             (catch Exception e))
+
+        :else
+        (for [file (file-seq (File. path))]
+          (.replace (.getPath file) path ""))))
+
+(def classfiles
+  (for [prop ["sun.boot.class.path" "java.ext.dirs" "java.class.path"]
+        path (.split (System/getProperty prop) File/pathSeparator)
+        file (path-files path) :when (and (.endsWith file ".class") (not (.contains file "__")))]
     file))
 
 (defn- classname [file]
   (.. file (replace File/separator ".") (replace ".class" "")))
 
-(defm top-level-classes []
-  (for [file (classfiles) :when (re-find #"^[^\$]+\.class" file)]
-    (classname file)))
+(def top-level-classes
+  (future
+    (doall
+     (for [file classfiles :when (re-find #"^[^\$]+\.class" file)]
+       (classname file)))))
 
-(defm nested-classes []
-  (for [file (classfiles) :when (re-find #"^[^\$]+(\$[^\d]\w*)+\.class" file)]
-    (classname file)))
+(def nested-classes
+  (future
+    (doall
+     (for [file classfiles :when (re-find #"^[^\$]+(\$[^\d]\w*)+\.class" file)]
+       (classname file)))))
 
 (defn resolve-class [sym]
   (try (let [val (resolve sym)]
@@ -89,12 +102,13 @@
   [prefix ns]
   (concat (namespaces ns)
           (if (.contains prefix "$")
-            (nested-classes)
-            (top-level-classes))))
+            @nested-classes
+            @top-level-classes)))
 
 (defmethod potential-completions :var
   [_ ns]
-  (concat (namespaces ns)
+  (concat special-forms
+          (namespaces ns)
           (ns-vars ns)
           (ns-classes ns)
           (ns-java-methods ns)))
