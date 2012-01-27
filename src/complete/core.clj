@@ -119,5 +119,5 @@
   "Return a sequence of matching completions given a prefix string and an optional current namespace."
   ([prefix] (completions prefix *ns*))
   ([prefix ns]
-     (for [completion (potential-completions prefix ns) :when (.startsWith completion prefix)]
-       completion)))
+     (sort (for [completion (potential-completions prefix ns) :when (.startsWith completion prefix)]
+             completion))))
