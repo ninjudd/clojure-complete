@@ -3,6 +3,8 @@ Clojure-complete is an symbol completion library for Clojure. The code is adapte
 
 ## Examples
 
+    (use 'complete.core)
+
     (completions "al" 'clojure.core)
     => ("alength" "alias" "all-ns" "alter" "alter-meta!" "alter-var-root")
 
