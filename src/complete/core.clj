@@ -1,4 +1,5 @@
 (ns complete.core
+  (:require [clojure.main])
   (:import [java.util.jar JarFile] [java.io File]))
 
 ;; Code adapted from swank-clojure (http://github.com/jochu/swank-clojure)
@@ -82,7 +83,8 @@
   (try (let [val (resolve sym)]
          (when (class? val) val))
        (catch RuntimeException e
-         (when (not= ClassNotFoundException (class e))
+         (when (not= ClassNotFoundException
+                     (class (clojure.main/repl-exception e)))
            (throw e)))))
 
 (defmulti potential-completions
