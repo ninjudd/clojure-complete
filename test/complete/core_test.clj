@@ -14,12 +14,23 @@
   (is (= '("complete.core" "complete.core-test")
          (completions "complete.core")))
   
+  (is (some #{"clojure.core.Vec"} (completions "clojure.core")))
+  
   (is (= '("System/out")
          (completions "System/o")))
   
   (is (= '("java.lang.System/out")
          (completions "java.lang.System/out")))
   
-  (some #{"valueOf"} (completions "String/"))
+  (is (some #{"String/valueOf"} (completions "String/")))
   
-  (not (some #{"String/indexOf" ".indexOf"} (completions "String/"))))
+  (is (not (some #{"String/indexOf" ".indexOf"} (completions "String/")))))
+
+;; shouldn't complete be able to complete on instance methods too ? 
+;; but instance methods of what ? 
+;; - An indexed list of available instance methods
+;;    (introspecting all the accessible classpath ?)
+;; - Classes who are accessible from the namespace ?
+;; - Classes who are accessible from the namespace + a set of collected
+;;   additional classes (e.g. found type hints, return results, etc.)
+
