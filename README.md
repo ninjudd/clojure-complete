@@ -13,3 +13,7 @@ Clojure-complete is an symbol completion library for Clojure. The code is adapte
 
     (completions "clojure.core")
     => ("clojure.core" "clojure.core.protocols" "clojure.core.ArrayChunk" "clojure.core.ArrayManager" "clojure.core.IVecImpl" "clojure.core.Vec" "clojure.core.VecNode" "clojure.core.VecSeq" "clojure.core.protocols.InternalReduce")
+
+## Running Tests
+
+    lein with-profile 1.2:1.3:1.4 test
