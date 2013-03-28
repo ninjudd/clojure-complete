@@ -1,4 +1,4 @@
-(defproject clojure-complete "0.2.3-SNAPSHOT"
+(defproject clojure-complete "0.2.3"
   :description "Standalone completion library adapted from swank-clojure"
   :dependencies [[org.clojure/clojure "1.3.0"]]
   :profiles {
