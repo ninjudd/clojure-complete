@@ -65,7 +65,7 @@
     file))
 
 (defn- classname [file]
-  (.. file (replace File/separator ".") (replace ".class" "")))
+  (.. file (replace ".class" "") (replace File/separator ".")))
 
 (def top-level-classes
   (future
