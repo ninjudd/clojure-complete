@@ -13,13 +13,13 @@
 
   (is (= '("complete.core" "complete.core-test")
          (completions "complete.core")))
-  
+
   (is (= '("System/out")
          (completions "System/o")))
-  
+
   (is (= '("java.lang.System/out")
          (completions "java.lang.System/out")))
-  
-  (some #{"valueOf"} (completions "String/"))
-  
-  (not (some #{"String/indexOf" ".indexOf"} (completions "String/"))))
+
+  (is (some #{"String/valueOf"} (completions "String/")))
+
+  (is (not (some #{"String/indexOf" ".indexOf"} (completions "String/")))))
