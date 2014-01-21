@@ -95,12 +95,13 @@
 
 (defmethod potential-completions :scoped
   [prefix ns]
-  (let [scope (symbol (first (.split prefix "/")))]
-    (map #(str scope "/" %)
-         (if-let [class (resolve-class scope)]
-           (static-members class)
-           (when-let [ns (or (find-ns scope) (scope (ns-aliases ns)))]
-             (ns-public-vars ns))))))
+  (when-let [prefix-scope (first (.split prefix "/"))]
+    (let [scope (symbol prefix-scope)]
+      (map #(str scope "/" %)
+           (if-let [class (resolve-class scope)]
+             (static-members class)
+             (when-let [ns (or (find-ns scope) (scope (ns-aliases ns)))]
+               (ns-public-vars ns)))))))
 
 (defmethod potential-completions :class
   [prefix ns]

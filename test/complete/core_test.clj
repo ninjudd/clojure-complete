@@ -20,6 +20,10 @@
   (is (= '("java.lang.System/out")
          (completions "java.lang.System/out")))
 
+  (is (= () (completions "fake-ns-here/")))
+
+  (is (= () (completions "/")))
+
   (is (some #{"String/valueOf"} (completions "String/")))
 
   (is (not (some #{"String/indexOf" ".indexOf"} (completions "String/")))))
