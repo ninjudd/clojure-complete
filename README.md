@@ -1,3 +1,5 @@
+[![Reference Status](https://www.versioneye.com/clojure/clojure-complete:clojure-complete/reference_badge.svg?style=flat)](https://www.versioneye.com/clojure/clojure-complete:clojure-complete/references)
+
 Clojure-complete is an symbol completion library for Clojure. The code is adapted from
 [jochu/swank-clojure](http://github.com/jochu/swank-clojure).
 
