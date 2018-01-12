@@ -62,7 +62,7 @@
           (.replace ^String (.getPath file) path ""))))
 
 (def classfiles
-  (for [prop ["sun.boot.class.path" "java.ext.dirs" "java.class.path"]
+  (for [prop (filter #(System/getProperty %1) ["sun.boot.class.path" "java.ext.dirs" "java.class.path"])
         path (.split (System/getProperty prop) File/pathSeparator)
         ^String file (path-files path) :when (and (.endsWith file ".class") (not (.contains file "__")))]
     file))
