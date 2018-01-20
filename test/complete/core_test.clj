@@ -11,6 +11,9 @@
   (is (= '("clojure.core/alter" "clojure.core/alter-meta!" "clojure.core/alter-var-root")
          (completions "clojure.core/alt" 'clojure.core)))
 
+  (is (= '("clojure.core" "clojure.core.ArrayChunk" "clojure.core.ArrayManager" "clojure.core.IVecImpl" "clojure.core.Vec" "clojure.core.VecNode" "clojure.core.VecSeq" "clojure.core.protocols" "clojure.core.protocols.InternalReduce")
+         (completions "clojure.co")))
+
   (is (= '("complete.core" "complete.core-test")
          (completions "complete.core")))
 
