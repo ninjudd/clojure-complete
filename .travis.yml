@@ -1,0 +1,9 @@
+language: clojure
+script: lein test
+
+notifications:
+  email: false
+
+jdk:
+  - oraclejdk8
+  - oraclejdk9
